@@ -1,12 +1,15 @@
+var calcWorker = new Worker('js/worker.js');
+
 document.addEventListener("DOMContentLoaded", function() {
 	registerEventListeners();
 });
 
 function registerEventListeners() {
 	document.getElementById("calcbtn").addEventListener("click", clickCalc);
-	document.querySelectorAll('input[type="number"]').forEach(function(element){
+	document.querySelectorAll('input').forEach(function(element){
 		element.addEventListener("change", resetForm);	
 	});
+	calcWorker.onmessage = onWorkerMessage
 }
 
 function resetForm(event) {
@@ -22,89 +25,42 @@ function clickCalc(event) {
 		form.classList.add('was-validated')
 		return
 	}
+	let message = readUIInputs()
+	calcWorker.postMessage(message)
+}
+
+function readUIInputs() {
 	let propval1 = document.getElementById('propval1').value | 0;
 	let propval2 = document.getElementById('propval2').value | 0;
 	let propval3 = document.getElementById('propval3').value | 0;
 	let skillpoints = document.getElementById('skillpoints').value | 0;
 	let skillmod = document.getElementById('skillmod').value | 0;
-	let resultFunc = generateResultFunc(propval1, propval2, propval3, skillpoints, skillmod);
-	let result = evaluatResultFunc(resultFunc)
-	document.getElementById('results').classList.remove('d-none')
-	for(let qs in result) {
-		let qsPercent = result[qs]/(20*20*20)
-		let node = document.getElementById('result-qs-'+qs);
-		node.childNodes[0].textNode = qsPercent
-	}
+	let cumulative = document.querySelector('input[name="cumulative"]:checked').value | 0;
+
+	let inputs = {propval1, propval2, propval3, skillpoints, skillpoints, cumulative}
+	return inputs
 }
 
-function evaluatResultFunc(resultFunc) {
-	let results = [0, 0, 0, 0, 0, 0, 0];
-	for( let dice1 = 1; dice1 <= 20; ++dice1) {
-		for( let dice2 = 1; dice2 <= 20; ++dice2){
-			for( let dice3 = 1; dice3 <= 20; ++dice3){
-				let result= resultFunc(dice1, dice2, dice3)
-				results[result] +=1
-			}
+function onWorkerMessage(event) {
+	let m = event.data
+	// check current state, might have changed in the mean time
+	let currentState = readUIInputs()
+	for (let k in currentState) {
+		if (currentState[k] != m[k]) {
+			console.log(k, currentState, m)
+			return
 		}
 	}
-	return results
-}
 
-function generateResultFunc(propval1, propval2, propval3, skillpoints, skillmod) {
-	const criticalDices = function(dice1, dice2, dice3, critV) {
-		return dice1 == critV && dice2 == critV ||
-		dice1 == critV && dice3 == critV || 
-		dice2 == critV && dice3 == critV
-	}
+	document.querySelector('.container').setAttribute('data-cumulative', m.cumulative)
 
-	const negativeCritDices = function(dice1, dice2, dice3) {
-		return criticalDices(dice1, dice2, dice3, 20)
-	}
-
-	const positiveCritDices = function(dice1, dice2, dice3) {
-		return criticalDices(dice1, dice2, dice3, 1)
-	}
-
-	const QS_FAIL = 0;
-	const QS_1 = 1;
-	const QS_2 = 2;
-	const QS_3 = 3;
-	const QS_4 = 4;
-	const QS_5 = 5;
-	const QS_6 = 6;
-
-	let skillPointsToQS = function(points){
-		if (points < 0)
-			return QS_FAIL;
-		if (points < 4)
-			return QS_1;
-		if (points < 7)
-			return QS_2;
-		if (points < 10)
-			return QS_3;
-		if (points < 13)
-			return QS_4;
-		if (points < 16)
-			return QS_5;
-		console.log(points)
-		return QS_6;
-	}
-	let singleDicePointsDebt = function(dice, prop) {
-		if (dice <= prop)
-			return 0
-		return prop - dice
-	}
-	return function(dice1, dice2, dice3) {
-		// special handling, crits
-		if (positiveCritDices(dice1, dice2, dice3))
-			return QS_6;
-		if (negativeCritDices(dice1, dice2, dice3))
-			return QS_FAIL;
-		let remainingPoints = skillpoints;
-		remainingPoints += singleDicePointsDebt(dice1, propval1+skillmod)
-		remainingPoints += singleDicePointsDebt(dice2, propval2+skillmod)
-		remainingPoints += singleDicePointsDebt(dice3, propval3+skillmod)
-
-		return skillPointsToQS(remainingPoints)
+	document.getElementById('runtime').textContent = m.time
+	document.getElementById('results').classList.remove('d-none')
+	for(let qs in m.result) {
+		let qsPercent = 100 * m.result[qs]/(20*20*20)
+		let node = document.querySelector('#result-qs-'+qs+' > .progress-bar')
+		node.textContent = qsPercent
+		node.setAttribute('aria-valuenow', qsPercent)
+		node.style.width = qsPercent + '%'
 	}
 }

@@ -7,12 +7,13 @@
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/app.css">
 
 	<title>DSA5 Tool</title>
 	<script src="js/app.js" async="async"></script>
 </head>
 <body class="bg-light">
-	<div class="container">
+	<div class="container" data-cumulative='1'>
 
 		<div class="py-5 text-center">
 			<h2>DSA5 Tool</h2>
@@ -58,6 +59,10 @@
 								Bitte eine Zahl zwischen -5 und 5 eingeben.
 							</div>
 						</div>
+						<div class="col-md-8 mb-3">
+						  <label><input type="radio" name="cumulative" value="1" checked>Kumulative QS</label>
+						  <label><input type="radio" name="cumulative" value="0">QS einzeln aufschlüsseln</label>
+						</div>
 					</div>
 					<button class="btn btn-primary btn-lg btn-block" id="calcbtn" type="submit">Berechnen</button>
 				</form>
@@ -66,7 +71,13 @@
 
 		<div class="row d-none" id="results">
 			<div class="col-md-8 order-md-1">
-				<h4 class="mb-3">Ergebnisse</h4>
+				<h4 class="mb-3 mt-3">Ergebnisse</h4>
+				<div class="row">
+					<div class="col-md-8 mb-3">
+						<small>Berechnung innerhalb von <span id="runtime"></span> ms.</small>
+					</div>
+				</div>
+
 				<div class="row">
 					<div class="col-md-8 mb-3">
 						Nicht bestanden
@@ -77,7 +88,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-8 mb-3">
-						QS 1
+						QS 1 <span class="toggle-cumulative">oder besser</span>
 						<div class="progress" id="result-qs-1">
 							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
 						</div>
@@ -85,7 +96,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-8 mb-3">
-						QS 2
+						QS 2 <span class="toggle-cumulative">oder besser</span>
 						<div class="progress" id="result-qs-2">
 							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
 						</div>
@@ -93,7 +104,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-8 mb-3">
-						QS 3
+						QS 3 <span class="toggle-cumulative">oder besser</span>
 						<div class="progress" id="result-qs-3">
 							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
 						</div>
@@ -101,7 +112,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-8 mb-3">
-						QS 4
+						QS 4 <span class="toggle-cumulative">oder besser</span>
 						<div class="progress" id="result-qs-4">
 							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
 						</div>
@@ -109,16 +120,16 @@
 				</div>
 				<div class="row">
 					<div class="col-md-8 mb-3">
-						QS 5
+						QS 5 <span class="toggle-cumulative">oder besser</span>
 						<div class="progress" id="result-qs-5">
 							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
 						</div>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-8 mb-3 result-qs-6">
-						QS 6
-						<div class="progress">
+					<div class="col-md-8 mb-3">
+						QS 6 <span class="toggle-cumulative">oder besser</span>
+						<div class="progress" id="result-qs-6">
 							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
 						</div>
 					</div>

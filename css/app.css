@@ -1,0 +1,7 @@
+.container[data-cumulative='1'] .toggle-cumulative {
+	display: inline;
+}
+
+.container[data-cumulative='0'] .toggle-cumulative {
+	display: none;
+}
