@@ -1,32 +1,39 @@
 var calcWorker = new Worker('js/worker.js');
+var pendingResponse = false;
+var pendingMessage = null;
 
 document.addEventListener("DOMContentLoaded", function() {
 	registerEventListeners();
+	// can we calc already?
+	if (document.getElementById("mainform").checkValidity()) {
+		performCalculations()
+	}
 });
 
 function registerEventListeners() {
-	document.getElementById("calcbtn").addEventListener("click", clickCalc);
 	document.querySelectorAll('input').forEach(function(element){
-		element.addEventListener("change", resetForm);	
+		element.addEventListener("change", performCalculations);	
 	});
 	calcWorker.onmessage = onWorkerMessage
 }
 
-function resetForm(event) {
-	let form = event.target.form;
+function performCalculations(event) {
+	let form = document.getElementById("mainform");
 	form.classList.remove('was-validated')
+	document.getElementById('results-loading').classList.add('d-none')
 	document.getElementById('results').classList.add('d-none')
-}
-
-function clickCalc(event) {
-	event.preventDefault();
-	let form = event.target.form;
 	if (!form.checkValidity()) {
 		form.classList.add('was-validated')
 		return
 	}
 	let message = readUIInputs()
-	calcWorker.postMessage(message)
+	document.getElementById('results-loading').classList.remove('d-none')
+	if (!pendingResponse) {
+		pendingResponse = true;
+		calcWorker.postMessage(message)
+	} else {
+		pendingMessage = message
+	}
 }
 
 function readUIInputs() {
@@ -37,11 +44,16 @@ function readUIInputs() {
 	let skillmod = document.getElementById('skillmod').value | 0;
 	let cumulative = document.querySelector('input[name="cumulative"]:checked').value | 0;
 
-	let inputs = {propval1, propval2, propval3, skillpoints, skillpoints, cumulative}
+	let inputs = {propval1, propval2, propval3, skillpoints, skillmod, cumulative}
 	return inputs
 }
 
 function onWorkerMessage(event) {
+	pendingResponse = false;
+	if (pendingMessage) {
+		calcWorker.postMessage(pendingMessage)
+		pendingMessage = null
+	}
 	let m = event.data
 	// check current state, might have changed in the mean time
 	let currentState = readUIInputs()
@@ -56,10 +68,12 @@ function onWorkerMessage(event) {
 
 	document.getElementById('runtime').textContent = m.time
 	document.getElementById('results').classList.remove('d-none')
+	document.getElementById('results-loading').classList.add('d-none')
+
 	for(let qs in m.result) {
 		let qsPercent = 100 * m.result[qs]/(20*20*20)
 		let node = document.querySelector('#result-qs-'+qs+' > .progress-bar')
-		node.textContent = qsPercent
+		node.textContent = (qsPercent |0) + "%"
 		node.setAttribute('aria-valuenow', qsPercent)
 		node.style.width = qsPercent + '%'
 	}

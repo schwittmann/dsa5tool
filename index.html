@@ -17,12 +17,12 @@
 
 		<div class="py-5 text-center">
 			<h2>DSA5 Tool</h2>
-			<p class="lead">Eine einfache Wahrscheinlichkeitsberechnung von Fähigkeitsproben in DSA5.</p>
+			<p class="lead">Eine einfache Wahrscheinlichkeitsberechnung von Fertigkeitsproben in DSA5.</p>
 		</div>
 		<div class="row">
-			<div class="col-md-8 order-md-1">
+			<div class="col-md-6 order-md-1">
 				<h4 class="mb-3">Eigenschaftswerte</h4>
-				<form class="needs-validation" novalidate>
+				<form class="needs-validation" id="mainform" novalidate>
 					<div class="row">
 						<div class="col-md-8 mb-3">
 							<label for="propval1">Eigenschaftswert 1</label>
@@ -64,14 +64,17 @@
 						  <label><input type="radio" name="cumulative" value="0">QS einzeln aufschlüsseln</label>
 						</div>
 					</div>
-					<button class="btn btn-primary btn-lg btn-block" id="calcbtn" type="submit">Berechnen</button>
 				</form>
 			</div>
-		</div>
-
-		<div class="row d-none" id="results">
-			<div class="col-md-8 order-md-1">
-				<h4 class="mb-3 mt-3">Ergebnisse</h4>
+			<div class="col-md-6 order-md-1 d-none" id="results-loading">
+				<div class="text-center">
+					<div class="spinner-border" role="status">
+						<span class="sr-only">Loading...</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 order-md-1 d-none" id="results">
+				<h4 class="mb-3">Ergebnisse</h4>
 				<div class="row">
 					<div class="col-md-8 mb-3">
 						<small>Berechnung innerhalb von <span id="runtime"></span> ms.</small>

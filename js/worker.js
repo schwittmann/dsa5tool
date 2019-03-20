@@ -67,7 +67,6 @@ function generateResultFunc(propval1, propval2, propval3, skillpoints, skillmod)
 			return QS_4;
 		if (points < 16)
 			return QS_5;
-		console.log(points)
 		return QS_6;
 	}
 	let singleDicePointsDebt = function(dice, prop) {
