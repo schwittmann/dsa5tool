@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+
+	<title>DSA5 Tool</title>
+	<script src="js/app.js" async="async"></script>
+</head>
+<body class="bg-light">
+	<div class="container">
+
+		<div class="py-5 text-center">
+			<h2>DSA5 Tool</h2>
+			<p class="lead">Eine einfache Wahrscheinlichkeitsberechnung von Fähigkeitsproben in DSA5.</p>
+		</div>
+		<div class="row">
+			<div class="col-md-8 order-md-1">
+				<h4 class="mb-3">Eigenschaftswerte</h4>
+				<form class="needs-validation" novalidate>
+					<div class="row">
+						<div class="col-md-8 mb-3">
+							<label for="propval1">Eigenschaftswert 1</label>
+							<input type="number" class="form-control" id="propval1" min="1" max="20" placeholder="" value="" required>
+							<div class="invalid-feedback">
+								Bitte eine Zahl zwischen 1 und 20 eingeben.
+							</div>
+						</div>
+						<div class="col-md-8 mb-3">
+							<label for="propval2">Eigenschaftswert 2</label>
+							<input type="number" class="form-control" id="propval2" min="1" max="20" placeholder="" value="" required>
+							<div class="invalid-feedback">
+								Bitte eine Zahl zwischen 1 und 20 eingeben.
+							</div>
+						</div>
+						<div class="col-md-8 mb-3">
+							<label for="propval3">Eigenschaftswert 3</label>
+							<input type="number" class="form-control" id="propval3" min="1" max="20" placeholder="" value="" required>
+							<div class="invalid-feedback">
+								Bitte eine Zahl zwischen 1 und 20 eingeben.
+							</div>
+						</div>
+						<div class="col-md-8 mb-3">
+							<label for="skillpoints">Fertigkeitspunkte</label>
+							<input type="number" class="form-control" id="skillpoints" min="0" max="20" placeholder="" value="" required>
+							<div class="invalid-feedback">
+								Bitte eine Zahl zwischen 0 und 20 eingeben.
+							</div>
+						</div>
+						<div class="col-md-8 mb-3">
+							<label for="skillmod">Probenerleichterung/-erschwernis</label>
+							<input type="number" class="form-control" id="skillmod" min="-5" max="5" placeholder="" value="0" required>
+							<div class="invalid-feedback">
+								Bitte eine Zahl zwischen -5 und 5 eingeben.
+							</div>
+						</div>
+					</div>
+					<button class="btn btn-primary btn-lg btn-block" id="calcbtn" type="submit">Berechnen</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="row d-none" id="results">
+			<div class="col-md-8 order-md-1">
+				<h4 class="mb-3">Ergebnisse</h4>
+				<div class="row">
+					<div class="col-md-8 mb-3">
+						Nicht bestanden
+						<div class="progress" id="result-qs-0">
+							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8 mb-3">
+						QS 1
+						<div class="progress" id="result-qs-1">
+							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8 mb-3">
+						QS 2
+						<div class="progress" id="result-qs-2">
+							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8 mb-3">
+						QS 3
+						<div class="progress" id="result-qs-3">
+							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8 mb-3">
+						QS 4
+						<div class="progress" id="result-qs-4">
+							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8 mb-3">
+						QS 5
+						<div class="progress" id="result-qs-5">
+							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8 mb-3 result-qs-6">
+						QS 6
+						<div class="progress">
+							<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+      <!-- Optional JavaScript
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+-->
+</html>
