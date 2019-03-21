@@ -75,6 +75,11 @@ function generateResultFunc(propval1, propval2, propval3, skillpoints, skillmod)
 		return prop - dice
 	}
 	return function(dice1, dice2, dice3) {
+		// below 0: can't roll
+		if (propval1 + skillmod <= 0 || 
+			propval2 + skillmod <= 0 ||
+			propval3 + skillmod <= 0)
+			return QS_FAIL;
 		// special handling, crits
 		if (positiveCritDices(dice1, dice2, dice3))
 			return QS_6;

@@ -73,7 +73,7 @@ function onWorkerMessage(event) {
 	for(let qs in m.result) {
 		let qsPercent = 100 * m.result[qs]/(20*20*20)
 		let node = document.querySelector('#result-qs-'+qs+' > .progress-bar')
-		node.textContent = (qsPercent |0) + "%"
+		document.querySelector('#result-qs-'+qs+' > .justify-content-center').textContent = Math.round(qsPercent*10)/10 + "%"
 		node.setAttribute('aria-valuenow', qsPercent)
 		node.style.width = qsPercent + '%'
 	}
